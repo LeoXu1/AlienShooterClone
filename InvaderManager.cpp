@@ -4,7 +4,7 @@
 
 InvaderManager::InvaderManager()
     : invaderDirection(1), lastInvaderMove(0), lastInvaderShot(0) {
-    initializeInvaders();
+    //initializeInvaders();
 }
 
 void InvaderManager::initializeInvaders() {
@@ -20,6 +20,10 @@ void InvaderManager::initializeInvaders() {
 
 std::vector<GameObject>& InvaderManager::getInvaders() {
     return invaders;
+}
+
+void InvaderManager::clearInvaders() {
+    invaders.clear();
 }
 
 void InvaderManager::update(std::vector<GameObject>& invaderBullets) {

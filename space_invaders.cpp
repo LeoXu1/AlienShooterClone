@@ -15,8 +15,8 @@
 
 class SpaceInvaders {
 public:
-    SpaceInvaders() : window(nullptr), renderer(nullptr), running(false), font(nullptr), paused(false), gameOver(false), betweenWaves(false),
-                      waveClearedTime(0), wave(1), powerLevel(1), powerUpCounter(0), player(SCREEN_WIDTH / 2 - 25, SCREEN_HEIGHT - 60, 50, 40) {}
+    SpaceInvaders() : window(nullptr), renderer(nullptr), running(false), font(nullptr), paused(false), gameOver(false), betweenWaves(true),
+                      waveClearedTime(0), wave(0), powerLevel(1), powerUpCounter(0), player(SCREEN_WIDTH / 2 - 25, SCREEN_HEIGHT - 60, 50, 40) {}
     
     ~SpaceInvaders() {
         cleanup();
@@ -101,16 +101,16 @@ public:
                     y >= restartButton.y && y <= restartButton.y + restartButton.h) {
                     gameOver = false;
                     paused = false;
-                    wave = 1;
+                    wave = 0;
                     powerLevel = 1;
                     bullets.clear();
                     invaderBullets.clear();
                     powerUps.clear();
                     player.reset(SCREEN_WIDTH / 2 - 25, SCREEN_HEIGHT - 60);
-                    invaderManager.initializeInvaders();
+                    invaderManager.clearInvaders();
                     powerUpCounter = 0;
-                    betweenWaves = false;
-                    waveClearedTime = 0;
+                    betweenWaves = true;
+                    waveClearedTime = SDL_GetTicks();
                 }
                 
                 if (x >= quitButton.x && x <= quitButton.x + quitButton.w &&
@@ -185,7 +185,7 @@ public:
             waveClearedTime = SDL_GetTicks();
         }
 
-        if (betweenWaves && SDL_GetTicks() - waveClearedTime > 3000) {
+        if (betweenWaves && SDL_GetTicks() - waveClearedTime > 6000) {
             wave++;
             invaderManager.initializeInvaders();
             betweenWaves = false;
@@ -203,7 +203,14 @@ public:
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        renderText("Wave: " + std::to_string(wave), SCREEN_WIDTH / 2, 20, { 255, 255, 255, 255 }, font);
+        if (wave > 0)
+        {
+            if (betweenWaves)
+                renderText("Wave Cleared!", SCREEN_WIDTH / 2, 20, { 255, 255, 255, 255 }, font);
+            else
+                renderText("Wave: " + std::to_string(wave), SCREEN_WIDTH / 2, 20, { 255, 255, 255, 255 }, font);
+        }
+
         renderText(std::to_string(powerLevel), powerRect.x + powerRect.w / 2 + 5, powerRect.y + powerRect.h / 2, { 255, 255, 255, 255 }, powerFont);
 
         // Render Power Bars
@@ -256,8 +263,8 @@ public:
             renderPauseDialog();
         }
 
-        if (betweenWaves) {
-            renderText("Wave Cleared!", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, { 0, 255, 0, 255 }, font);
+        if (betweenWaves && SDL_GetTicks() - waveClearedTime > 3000 && SDL_GetTicks() - waveClearedTime < 5000) {
+            renderText("Wave " + std::to_string(wave+1), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100, { 0, 255, 0, 255 }, font);
         }
 
         SDL_RenderPresent(renderer);
@@ -278,6 +285,11 @@ public:
         if (font) {
             TTF_CloseFont(font);
             font = nullptr;
+        }
+
+        if (powerFont) {
+            TTF_CloseFont(powerFont);
+            powerFont = nullptr;
         }
 
         if (renderer) {

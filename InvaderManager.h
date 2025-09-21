@@ -15,6 +15,7 @@ public:
     InvaderManager();
     void initializeInvaders();
     std::vector<GameObject>& getInvaders();
+    void clearInvaders();
     void update(std::vector<GameObject>& invaderBullets);
     void render(SDL_Renderer* renderer);
     void checkCollisions(std::vector<GameObject>& playerBullets, std::vector<GameObject>& powerUps);
