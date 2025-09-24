@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "Powerup.h"
 #include <vector>
 #include <SDL.h>
 
@@ -18,6 +19,6 @@ public:
     void clearInvaders();
     void update(std::vector<GameObject>& invaderBullets);
     void render(SDL_Renderer* renderer);
-    void checkCollisions(std::vector<GameObject>& playerBullets, std::vector<GameObject>& powerUps);
+    void checkCollisions(std::vector<GameObject>& playerBullets, std::vector<Powerup>& powerUps);
     bool allInvadersDestroyed();
 };

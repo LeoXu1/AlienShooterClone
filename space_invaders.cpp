@@ -11,6 +11,7 @@
 #include "space_invaders_common.h"
 #include "GameObject.h"
 #include "Player.h"
+#include "Powerup.h"
 #include "InvaderManager.h"
 
 class SpaceInvaders {
@@ -141,8 +142,7 @@ public:
         }
 
         for (auto& powerUp : powerUps) {
-            powerUp.y += 2;
-            if (powerUp.y > SCREEN_HEIGHT) powerUp.active = false;
+            powerUp.update();
         }
         
         invaderManager.update(invaderBullets);
@@ -168,9 +168,9 @@ public:
         }
 
         for (auto& powerUp : powerUps) {
-            if (powerUp.collidesWith(player)) {
+            if (powerUp.collidesWith(player) && !powerUp.isCollected()) {
                 powerUpCounter++;
-                powerUp.active = false;
+                powerUp.collectTo(powerRect);
                 if (powerUpCounter >= 5) {
                     powerLevel++;
                     powerUpCounter = 0;
@@ -244,11 +244,10 @@ public:
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-        for (const auto& powerUp : powerUps) {
+        //SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        for (auto& powerUp : powerUps) {
             if (powerUp.active) {
-                SDL_Rect powerUpRect = powerUp.getRect();
-                SDL_RenderFillRect(renderer, &powerUpRect);
+                powerUp.render(renderer);
             }
         }
         
@@ -319,7 +318,7 @@ private:
     InvaderManager invaderManager;
     std::vector<GameObject> bullets;
     std::vector<GameObject> invaderBullets;
-    std::vector<GameObject> powerUps;
+    std::vector<Powerup> powerUps;
 
     SDL_Rect powerRect = { 0, 0, 70, 70 };
     SDL_Rect powerBars[5] = { {5, 80, 10, 10}, {20, 80, 10, 10}, {35, 80, 10, 10}, {50, 80, 10, 10}, {65, 80, 10, 10} };

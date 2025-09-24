@@ -87,7 +87,7 @@ void InvaderManager::render(SDL_Renderer* renderer) {
     }
 }
 
-void InvaderManager::checkCollisions(std::vector<GameObject>& playerBullets, std::vector<GameObject>& powerUps) {
+void InvaderManager::checkCollisions(std::vector<GameObject>& playerBullets, std::vector<Powerup>& powerUps) {
     for (auto& bullet : playerBullets) {
         if (!bullet.active) continue;
         for (auto& invader : invaders) {
@@ -95,7 +95,7 @@ void InvaderManager::checkCollisions(std::vector<GameObject>& playerBullets, std
                 bullet.active = false;
                 invader.active = false;
                 int r = rand() % 100;
-                if (r < 20) powerUps.push_back(GameObject(invader.x, invader.y, 10, 10));
+                if (r < 20) powerUps.push_back(Powerup(invader.x, invader.y, 10, 10));
                 break;
             }
         }
