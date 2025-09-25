@@ -142,7 +142,7 @@ public:
         }
 
         for (auto& powerUp : powerUps) {
-            powerUp.update();
+            //powerUp.update(powerUpCounter);
         }
         
         invaderManager.update(invaderBullets);
@@ -168,8 +168,8 @@ public:
         }
 
         for (auto& powerUp : powerUps) {
+            powerUp.update(powerUpCounter);
             if (powerUp.collidesWith(player) && !powerUp.isCollected()) {
-                powerUpCounter++;
                 powerUp.collectTo(powerRect);
                 if (powerUpCounter >= 5) {
                     powerLevel++;
@@ -196,6 +196,10 @@ public:
                      [](const GameObject& obj) { return !obj.active; }), bullets.end());
         invaderBullets.erase(std::remove_if(invaderBullets.begin(), invaderBullets.end(),
                             [](const GameObject& obj) { return !obj.active; }), invaderBullets.end());
+        powerUps.erase(std::remove_if(powerUps.begin(), powerUps.end(),
+                            [](const GameObject& obj) { return !obj.active; }), powerUps.end());
+    
+
     }
     
     void render() {

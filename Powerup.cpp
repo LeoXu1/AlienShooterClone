@@ -5,12 +5,13 @@
 Powerup::Powerup(float x, float y, int w, int h)
     : GameObject(x, y, w, h), collected(false), direction(0) {}
 
-void Powerup::update() {
+void Powerup::update(int& count) {
     if (collected) {
-        x += std::cos(direction) * 5;
-        y += std::sin(direction) * 5;
+        x += std::cos(direction) * 10;
+        y += std::sin(direction) * 10;
         if (x < collectRect.x + collectRect.w && y < collectRect.y + collectRect.h) {
             active = false;
+            count++;
         }
         return;
     }
