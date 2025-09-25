@@ -140,10 +140,6 @@ public:
             bullet.y += BULLET_SPEED - 2;
             if (bullet.y > SCREEN_HEIGHT) bullet.active = false;
         }
-
-        for (auto& powerUp : powerUps) {
-            //powerUp.update(powerUpCounter);
-        }
         
         invaderManager.update(invaderBullets);
 

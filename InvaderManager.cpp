@@ -95,7 +95,7 @@ void InvaderManager::checkCollisions(std::vector<GameObject>& playerBullets, std
                 bullet.active = false;
                 invader.active = false;
                 int r = rand() % 100;
-                if (r < 20) powerUps.push_back(Powerup(invader.x, invader.y, 10, 10));
+                if (r < 5) powerUps.push_back(Powerup(invader.x, invader.y, 10, 10));
                 break;
             }
         }
