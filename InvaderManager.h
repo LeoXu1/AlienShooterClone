@@ -4,6 +4,8 @@
 #include "Powerup.h"
 #include <vector>
 #include <SDL.h>
+#include <algorithm>
+#include <random>
 
 class InvaderManager {
 private:
@@ -21,4 +23,5 @@ public:
     void render(SDL_Renderer* renderer);
     void checkCollisions(std::vector<GameObject>& playerBullets, std::vector<Powerup>& powerUps);
     bool allInvadersDestroyed();
+    std::vector<GameObject*> chooseMultiple(std::vector<GameObject*>& vec, int n);
 };

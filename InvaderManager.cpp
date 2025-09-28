@@ -69,9 +69,12 @@ void InvaderManager::update(std::vector<GameObject>& invaderBullets) {
         }
 
         if (!activeInvaders.empty()) {
-            GameObject* shooter = activeInvaders[rand() % activeInvaders.size()];
-            invaderBullets.push_back(GameObject(shooter->x + shooter->width/2 - 2,
+            int numShooters = activeInvaders.size() > 10 ? rand() % 2 + 1 : 1;
+            std::vector<GameObject*> shooters = chooseMultiple(activeInvaders, numShooters);
+            for (auto shooter : shooters) {
+                invaderBullets.push_back(GameObject(shooter->x + shooter->width/2 - 2,
                                              shooter->y + shooter->height, 4, 10));
+            }
         }
         lastInvaderShot = currentTime;
     }
@@ -109,4 +112,14 @@ bool InvaderManager::allInvadersDestroyed() {
         }
     }
     return true;
+}
+
+std::vector<GameObject*> InvaderManager::chooseMultiple(std::vector<GameObject*>& vec, int n) {
+    std::vector<GameObject*> result;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::shuffle(vec.begin(), vec.end(), gen);
+    result.reserve(n);
+    result.insert(result.end(), vec.begin(), vec.begin() + n);
+    return result;
 }
