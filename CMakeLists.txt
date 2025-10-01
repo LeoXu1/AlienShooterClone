@@ -12,6 +12,8 @@ add_executable(game space_invaders.cpp
                     InvaderManager.h 
                     Player.cpp 
                     Player.h 
+                    Bullet.h
+                    Bullet.cpp
                     Powerup.h
                     Powerup.cpp
                     space_invaders_common.h)
