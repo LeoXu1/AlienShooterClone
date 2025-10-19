@@ -1,7 +1,9 @@
 #pragma once
 
 #include "GameObject.h"
+#include "space_invaders_common.h"
 #include <SDL.h>
+#include <cmath>
 
 class Bullet : public GameObject {
 private:
@@ -9,6 +11,7 @@ private:
     float direction;
 public:
     Bullet(float x, float y, int w, int h, bool friendly);
+    Bullet(float x, float y, int w, int h, bool friendly, float direction);
     void update();
     void render(SDL_Renderer* renderer);
     
