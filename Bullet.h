@@ -12,7 +12,7 @@ private:
 public:
     Bullet(float x, float y, int w, int h, bool friendly);
     Bullet(float x, float y, int w, int h, bool friendly, float direction);
+    bool isFriendly() const { return friendly; }
     void update();
-    void render(SDL_Renderer* renderer);
-    
+    void render(SDL_Renderer* renderer) const;
 };

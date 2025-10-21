@@ -12,6 +12,7 @@
 #include "GameObject.h"
 #include "Player.h"
 #include "Powerup.h"
+#include "Bullet.h"
 #include "InvaderManager.h"
 
 class SpaceInvaders {
@@ -105,7 +106,6 @@ public:
                     wave = 0;
                     powerLevel = 1;
                     bullets.clear();
-                    invaderBullets.clear();
                     powerUps.clear();
                     player.reset(SCREEN_WIDTH / 2 - 25, SCREEN_HEIGHT - 60);
                     invaderManager.clearInvaders();
@@ -128,27 +128,16 @@ public:
     
     void update() {
         player.update(bullets);
-
-        // Update bullets
-        for (auto& bullet : bullets) {
-            bullet.y -= BULLET_SPEED;
-            if (bullet.y < 0) bullet.active = false;
-        }
-        
-        // Update invader bullets
-        for (auto& bullet : invaderBullets) {
-            bullet.y += BULLET_SPEED - 2;
-            if (bullet.y > SCREEN_HEIGHT) bullet.active = false;
-        }
-        
-        invaderManager.update(invaderBullets);
+        invaderManager.update(bullets);
 
         // Check collisions - bullets vs invaders
         invaderManager.checkCollisions(bullets, powerUps);
         
         // Check collisions - invader bullets vs player
-        for (auto& bullet : invaderBullets) {
-            if (bullet.collidesWith(player)) {
+        for (auto& bullet : bullets) {
+            bullet.update();
+            
+            if (!bullet.isFriendly() && bullet.collidesWith(player)) {
                 gameOver = true;
                 paused = true;
                 break;
@@ -189,13 +178,9 @@ public:
         
         // Remove inactive objects
         bullets.erase(std::remove_if(bullets.begin(), bullets.end(),
-                     [](const GameObject& obj) { return !obj.active; }), bullets.end());
-        invaderBullets.erase(std::remove_if(invaderBullets.begin(), invaderBullets.end(),
-                            [](const GameObject& obj) { return !obj.active; }), invaderBullets.end());
+                     [](const Bullet& obj) { return !obj.active; }), bullets.end());
         powerUps.erase(std::remove_if(powerUps.begin(), powerUps.end(),
                             [](const GameObject& obj) { return !obj.active; }), powerUps.end());
-    
-
     }
     
     void render() {
@@ -230,17 +215,7 @@ public:
         SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
         for (const auto& bullet : bullets) {
             if (bullet.active) {
-                SDL_Rect bulletRect = bullet.getRect();
-                SDL_RenderFillRect(renderer, &bulletRect);
-            }
-        }
-        
-        // Draw invader bullets
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        for (const auto& bullet : invaderBullets) {
-            if (bullet.active) {
-                SDL_Rect bulletRect = bullet.getRect();
-                SDL_RenderFillRect(renderer, &bulletRect);
+                bullet.render(renderer);
             }
         }
 
@@ -316,8 +291,7 @@ private:
     
     Player player;
     InvaderManager invaderManager;
-    std::vector<GameObject> bullets;
-    std::vector<GameObject> invaderBullets;
+    std::vector<Bullet> bullets;
     std::vector<Powerup> powerUps;
 
     SDL_Rect powerRect = { 0, 0, 70, 70 };

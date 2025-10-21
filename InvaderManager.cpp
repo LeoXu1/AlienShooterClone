@@ -26,7 +26,7 @@ void InvaderManager::clearInvaders() {
     invaders.clear();
 }
 
-void InvaderManager::update(std::vector<GameObject>& invaderBullets) {
+void InvaderManager::update(std::vector<Bullet>& invaderBullets) {
     Uint32 currentTime = SDL_GetTicks();
 
     // Move invaders
@@ -70,8 +70,8 @@ void InvaderManager::update(std::vector<GameObject>& invaderBullets) {
 
         if (!activeInvaders.empty()) {
             GameObject* shooter = activeInvaders[rand() % activeInvaders.size()];
-            invaderBullets.push_back(GameObject(shooter->x + shooter->width/2 - 2,
-                                             shooter->y + shooter->height, 4, 10));
+            invaderBullets.push_back(Bullet(shooter->x + shooter->width/2 - 2,
+                                             shooter->y + shooter->height, 4, 10, false));
         }
         lastInvaderShot = currentTime;
     }
@@ -87,11 +87,11 @@ void InvaderManager::render(SDL_Renderer* renderer) {
     }
 }
 
-void InvaderManager::checkCollisions(std::vector<GameObject>& playerBullets, std::vector<Powerup>& powerUps) {
+void InvaderManager::checkCollisions(std::vector<Bullet>& playerBullets, std::vector<Powerup>& powerUps) {
     for (auto& bullet : playerBullets) {
         if (!bullet.active) continue;
         for (auto& invader : invaders) {
-            if (bullet.collidesWith(invader)) {
+            if (bullet.isFriendly() && bullet.collidesWith(invader)) {
                 bullet.active = false;
                 invader.active = false;
                 int r = rand() % 100;

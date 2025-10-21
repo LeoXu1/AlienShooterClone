@@ -25,7 +25,7 @@ void Player::handleInput() {
 
 }
 
-void Player::update(std::vector<GameObject>& bullets) {
+void Player::update(std::vector<Bullet>& bullets) {
     // Clamp player position to screen bounds
     if (x < 0) x = 0;
     if (x > SCREEN_WIDTH - width) x = SCREEN_WIDTH - width;
@@ -34,7 +34,7 @@ void Player::update(std::vector<GameObject>& bullets) {
 
     Uint32 currentTime = SDL_GetTicks();
     if (currentTime - lastShot > 250) { // Limit firing rate
-        bullets.push_back(GameObject(x + width/2 - 2, y, 4, 10));
+        bullets.push_back(Bullet(x + width/2 - 2, y, 4, 10, true));
         lastShot = currentTime;
     }
 }
