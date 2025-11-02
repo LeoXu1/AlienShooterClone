@@ -128,7 +128,7 @@ public:
     
     void update() {
         player.update(bullets);
-        invaderManager.update(bullets);
+        invaderManager.update(bullets, player.getRect());
 
         // Check collisions - bullets vs invaders
         invaderManager.checkCollisions(bullets, powerUps);

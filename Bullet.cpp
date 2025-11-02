@@ -10,7 +10,7 @@ Bullet::Bullet(float x, float y, int w, int h, bool friendly)
     }
 
 Bullet::Bullet(float x, float y, int w, int h, bool friendly, float direction)
-    : GameObject(x, y, w, h), friendly(friendly), direction(direction * M_PI / 180)  {}
+    : GameObject(x, y, w, h), friendly(friendly), direction(direction)  {}
 
 void Bullet::update() {
     x += std::cos(direction) * BULLET_SPEED;

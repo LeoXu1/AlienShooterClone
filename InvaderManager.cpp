@@ -26,7 +26,7 @@ void InvaderManager::clearInvaders() {
     invaders.clear();
 }
 
-void InvaderManager::update(std::vector<Bullet>& invaderBullets) {
+void InvaderManager::update(std::vector<Bullet>& invaderBullets, SDL_Rect playerRect) {
     Uint32 currentTime = SDL_GetTicks();
 
     // Move invaders
@@ -70,8 +70,16 @@ void InvaderManager::update(std::vector<Bullet>& invaderBullets) {
 
         if (!activeInvaders.empty()) {
             GameObject* shooter = activeInvaders[rand() % activeInvaders.size()];
-            invaderBullets.push_back(Bullet(shooter->x + shooter->width/2 - 2,
-                                             shooter->y + shooter->height, 4, 10, false));
+            int r = rand() % 100;
+            if (r < 25) {
+                float direction = std::atan2(playerRect.y - shooter->y, playerRect.x - shooter->x);
+                invaderBullets.push_back(Bullet(shooter->x + shooter->width/2 - 2,
+                                                shooter->y + shooter->height, 4, 10, false, direction));
+            }
+            else {
+                invaderBullets.push_back(Bullet(shooter->x + shooter->width/2 - 2,
+                                                shooter->y + shooter->height, 4, 10, false));
+            }
         }
         lastInvaderShot = currentTime;
     }
